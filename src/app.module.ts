@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { UserModule } from './modules/auth/auth.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { redisStore } from 'cache-manager-redis-yet';
         });
         return { store }
       }
-    })
+    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
