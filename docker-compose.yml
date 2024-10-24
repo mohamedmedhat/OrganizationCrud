@@ -1,21 +1,21 @@
 version: '3'
 services:
   app:
-    build: .
+    image: node:18-alpine  # Use official Node image, no need to build
     container_name: nestjs_app
+    working_dir: /usr/src/app  # Set working directory inside the container
     ports:
       - '8080:8080'
-    depends_on:
-      - mongodb
-      - redis
     environment:
-      MONGO_URI: mongodb://mongodb:27017/organizationdb
-      REDIS_HOST: redis
+      MONGO_URI: mongodb://localhost:27017/organizationdb  # If you decide to use Docker MongoDB again
+      REDIS_HOST: localhost  # If you decide to use Docker Redis again
       REDIS_PORT: 6379
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    command: npm run start:prod
+      - .:/usr/src/app  # Mount local code for live reload
+      - /usr/src/app/node_modules  # Keep node_modules in the container
+    command: npm run start:dev  # Run the app in development mode (watching files for changes)
+    networks:
+      - app-network  # Use the custom network
 
   mongodb:
     image: mongo:latest
@@ -24,6 +24,8 @@ services:
       - '27017:27017'
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-network  # Use the custom network
 
   redis:
     image: redis:latest
@@ -32,7 +34,13 @@ services:
       - '6379:6379'
     volumes:
       - redis_data:/data
+    networks:
+      - app-network  # Use the custom network
 
 volumes:
   mongo_data:
   redis_data:
+
+networks:
+  app-network:  # Define the custom network
+    driver: bridge
