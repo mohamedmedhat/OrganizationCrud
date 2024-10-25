@@ -26,14 +26,22 @@ import { OrganizationModule } from './modules/organizer/organization.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
-        const store = await redisStore({
+        const storeOptions =
+          process.env.NODE_ENV === 'development'
+            ? {
+                socket: {
+                  host: config.getOrThrow<string>('REDIS_HOST'),
+                  port: config.getOrThrow<number>('REDIS_PORT'),
+                },
+              }
+            : {
+                url: config.getOrThrow<string>('REDIS_URL'),
+              };
+        const store = await redisStore(storeOptions);
+        return {
+          store,
           ttl: config.getOrThrow<number>('CACHE_TTL'),
-          socket: {
-            host: config.getOrThrow<string>('REDIS_HOST'),
-            port: config.getOrThrow<number>('REDIS_PORT'),
-          },
-        });
-        return { store };
+        };
       },
     }),
     JwtModule.registerAsync({
@@ -51,7 +59,7 @@ import { OrganizationModule } from './modules/organizer/organization.module';
       }),
     }),
     UserModule,
-    OrganizationModule
+    OrganizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
