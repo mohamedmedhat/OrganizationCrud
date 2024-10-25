@@ -20,6 +20,7 @@ import { OrganizationPaginationResponseDto } from '../dto/response/organizations
 import { InvitingUsersRequestDto } from '../dto/request/inviting-user-request.dto';
 import { UserRepository } from 'src/modules/auth/repository/auth-repository.service';
 import { PaginationInvitiationsResponseDto } from '../dto/response/invitations-pagination-response.dto';
+import { CacheService } from 'src/shared/caching/cache.service';
 
 @Injectable()
 export class OrganizationService implements IOrganizationService {
@@ -28,6 +29,7 @@ export class OrganizationService implements IOrganizationService {
     private readonly _organizationRepo: OrganizationRepository,
     @Inject(forwardRef(() => UserRepository))
     private readonly _userRepo: UserRepository,
+    private readonly _cacheService: CacheService
   ) {}
 
   async createOrganization(
@@ -71,8 +73,15 @@ export class OrganizationService implements IOrganizationService {
     page: number,
     size: number,
   ): Promise<OrganizationPaginationResponseDto> {
-    return await this._organizationRepo.findAllOrganizations(page, size);
+    const [organizations, total] = await this._cacheService.handleCachingPaginatedQuery<Organization>(
+      `getAllOrganizations?page=${page}?size=${size}`,
+      async () => {
+        return await this._organizationRepo.findAllOrganizations(page, size);
+      }
+    );  
+    return new OrganizationPaginationResponseDto(organizations, total);
   }
+  
 
   async inviteUserToOrganization(
     id: string,

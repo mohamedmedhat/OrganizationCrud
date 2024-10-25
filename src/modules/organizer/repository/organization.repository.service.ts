@@ -43,17 +43,15 @@ export class OrganizationRepository {
   async findAllOrganizations(
     page: number,
     size: number,
-  ): Promise<OrganizationPaginationResponseDto> {
+  ): Promise<[Organization[], number]> {
     const totalOrganizations = await this._organizationModel.countDocuments();
     const organizations = await this._organizationModel
       .find()
       .skip((page - 1) * size)
       .limit(size);
-    return new OrganizationPaginationResponseDto(
-      organizations,
-      totalOrganizations,
-    );
+    return [organizations, totalOrganizations];
   }
+  
 
   async updateOrganization(
     id: string,

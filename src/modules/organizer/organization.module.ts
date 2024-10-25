@@ -6,6 +6,8 @@ import { OrganizationRepository } from './repository/organization.repository.ser
 import { OrganizationController } from './controller/organization.controller';
 import { Invitation, InvitationSchema } from './model/invitation.model';
 import { UserModule } from '../auth/auth.module';
+import { CacheService } from 'src/shared/caching/cache.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { UserModule } from '../auth/auth.module';
       { name: Invitation.name, schema: InvitationSchema },
     ]),
     UserModule,
+    CacheModule.register()
   ],
   providers: [
     {
@@ -21,6 +24,7 @@ import { UserModule } from '../auth/auth.module';
       useClass: OrganizationService,
     },
     OrganizationRepository,
+    CacheService
   ],
   controllers: [OrganizationController],
   exports: ['IOrganizationService'],
