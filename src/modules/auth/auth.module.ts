@@ -4,10 +4,17 @@ import { UserController } from './controller/auth.controller';
 import { UserRepository } from './repository/auth-repository.service';
 import { User, UserSchema } from './schema/user.schema';
 import { UserService } from './service/auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { RefreshToken, RefreshTokenSchema } from './schema/token.schema';
+import { JwtRefreshStrategy } from 'src/utils/stratigies/refresh-jwt.strategy';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
+    JwtModule,
   ],
   controllers: [UserController],
   providers: [
@@ -16,6 +23,7 @@ import { UserService } from './service/auth.service';
       useClass: UserService,
     },
     UserRepository,
+    JwtRefreshStrategy
   ],
   exports: ['IUserService'],
 })

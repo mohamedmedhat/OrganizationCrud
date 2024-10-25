@@ -1,10 +1,18 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { IUserService } from 'src/common/interface/user-service.interface';
 import { RegisterRequestDto } from '../dto/request/create/create-user.dto';
 import { RegisterResponseDto } from '../dto/response/register-response.dto';
 import { LoginRequestDto } from '../dto/request/create/login-user.dto';
 import { LoginResponseDto } from '../dto/response/login-response.dto';
 import { RefreshTokenResponseDto } from '../dto/response/refresh-token-response.do';
+import { RefreshTokenGuard } from 'src/common/guards/refresh-jwt.guard';
 
 @Controller('/')
 export class UserController {
@@ -25,7 +33,19 @@ export class UserController {
   }
 
   @Post('/refresh-token')
-  async refreshToken(@Body() token: string): Promise<RefreshTokenResponseDto> {
+  async refreshToken(
+    @Body() body: { token: string },
+  ): Promise<RefreshTokenResponseDto> {
+    const { token } = body;
     return this._userService.refreshToken(token);
+  }
+
+  @Post('/revoke-refresh-token')
+  @UseGuards(RefreshTokenGuard)
+  async revokeRefreshToken(
+    @Request() req,
+    @Body() body: { refresh_token: string },
+  ) {
+    return await this._userService.revokeRefreshToken(body.refresh_token);
   }
 }

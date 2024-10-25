@@ -6,22 +6,23 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { UserModule } from './modules/auth/auth.module';
-
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     MongooseModule.forRootAsync({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory:(config: ConfigService) => ({
-        uri: config.getOrThrow<string>('MONGO_DB_URI')
-      })
+      useFactory: (config: ConfigService) => ({
+        uri: config.getOrThrow<string>('MONGO_DB_URI'),
+      }),
     }),
     CacheModule.register({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const store = await redisStore({
@@ -29,10 +30,24 @@ import { UserModule } from './modules/auth/auth.module';
           socket: {
             host: config.getOrThrow<string>('REDIS_HOST'),
             port: config.getOrThrow<number>('REDIS_PORT'),
-          }
+          },
         });
-        return { store }
-      }
+        return { store };
+      },
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        global: true,
+      }),
+    }),
+    PassportModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async () => ({
+        defaultStrategy: 'jwt',
+      }),
     }),
     UserModule,
   ],
