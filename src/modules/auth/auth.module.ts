@@ -7,6 +7,7 @@ import { UserService } from './service/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { RefreshToken, RefreshTokenSchema } from './schema/token.schema';
 import { JwtRefreshStrategy } from 'src/utils/stratigies/refresh-jwt.strategy';
+import { JwtStrategy } from 'src/utils/stratigies/jwt.strategy';
 
 @Module({
   imports: [
@@ -14,7 +15,10 @@ import { JwtRefreshStrategy } from 'src/utils/stratigies/refresh-jwt.strategy';
       { name: User.name, schema: UserSchema },
       { name: RefreshToken.name, schema: RefreshTokenSchema },
     ]),
-    JwtModule,
+    JwtModule.register({
+      secret: process.env.JWT_ACCESS_SECRET || 'default_secret',
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [UserController],
   providers: [
@@ -23,8 +27,9 @@ import { JwtRefreshStrategy } from 'src/utils/stratigies/refresh-jwt.strategy';
       useClass: UserService,
     },
     UserRepository,
-    JwtRefreshStrategy
+    JwtStrategy,
+    JwtRefreshStrategy,
   ],
-  exports: ['IUserService'],
+  exports: ['IUserService', UserRepository],
 })
 export class UserModule {}
