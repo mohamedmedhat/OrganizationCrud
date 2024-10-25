@@ -8,6 +8,7 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { UserModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { OrganizationModule } from './modules/organizer/organization.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { PassportModule } from '@nestjs/passport';
       }),
     }),
     UserModule,
+    OrganizationModule
   ],
   controllers: [AppController],
   providers: [AppService],
