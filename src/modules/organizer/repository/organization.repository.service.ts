@@ -33,7 +33,13 @@ export class OrganizationRepository {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid ObjectId format');
     }
-    const org = await this._organizationModel.findById(id).exec();
+    const org = await this._organizationModel.
+    findById(id)
+    .populate({
+       path: 'members.user',
+      select: 'name email'
+    })
+    .exec();
     if (!org) {
       throw new BadRequestException('Organization not found');
     }
