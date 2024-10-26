@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Organization } from '../model/organization.model';
 import { Model, Types } from 'mongoose';
 import { CreateOrganizationRequestDto } from '../dto/request/create-organization-request.dto';
-import { OrganizationPaginationResponseDto } from '../dto/response/organizations-pagination-response.dto';
 import { UpdateOrganizationRequestDto } from '../dto/request/update-organization-request.dto';
 import { InviteUserDto } from '../dto/response/inviting-user-response.dto';
 import { Invitation } from '../model/invitation.model';
@@ -33,13 +32,13 @@ export class OrganizationRepository {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid ObjectId format');
     }
-    const org = await this._organizationModel.
-    findById(id)
-    .populate({
-       path: 'members.user',
-      select: 'name email'
-    })
-    .exec();
+    const org = await this._organizationModel
+      .findById(id)
+      .populate({
+        path: 'members.user',
+        select: 'name email',
+      })
+      .exec();
     if (!org) {
       throw new BadRequestException('Organization not found');
     }
@@ -57,12 +56,10 @@ export class OrganizationRepository {
       .limit(size)
       .populate({
         path: 'members.user',
-        select: 'name email'
-      })
-      ;
+        select: 'name email',
+      });
     return [organizations, totalOrganizations];
   }
-  
 
   async updateOrganization(
     id: string,
