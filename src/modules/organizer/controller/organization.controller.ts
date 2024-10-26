@@ -74,7 +74,7 @@ export class OrganizationController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('invitations')
   async getAllInvitations(
     @Query('page') page: number,
     @Query('size') size: number,

@@ -48,7 +48,12 @@ export class OrganizationRepository {
     const organizations = await this._organizationModel
       .find()
       .skip((page - 1) * size)
-      .limit(size);
+      .limit(size)
+      .populate({
+        path: 'members.user',
+        select: 'name email'
+      })
+      ;
     return [organizations, totalOrganizations];
   }
   
