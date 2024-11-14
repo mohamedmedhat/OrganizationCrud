@@ -7,7 +7,7 @@ import { PaginationInvitiationsResponseDto } from "src/modules/organizer/dto/res
 import { InvitingUsersResponseDto } from "src/modules/organizer/dto/response/inviting-users-response.dto";
 import { OrganizationPaginationResponseDto } from "src/modules/organizer/dto/response/organizations-pagination-response.dto";
 import { UpdateOrganizationResponseDto } from "src/modules/organizer/dto/response/update-organization-response.dto";
-import { Organization } from "src/modules/organizer/model/organization.model";
+import { Organization } from "src/modules/organizer/schema/organization.schema";
 
 export interface IOrganizationService {
     createOrganization(organizationData: CreateOrganizationRequestDto): Promise<CreateOrganizationResponseDto>;

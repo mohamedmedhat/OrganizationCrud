@@ -14,7 +14,7 @@ import { UpdateOrganizationResponseDto } from '../dto/response/update-organizati
 import {
   Organization,
   OrganizationDocument,
-} from '../model/organization.model';
+} from '../schema/organization.schema';
 import { OrganizationRepository } from '../repository/organization.repository.service';
 import { OrganizationPaginationResponseDto } from '../dto/response/organizations-pagination-response.dto';
 import { InvitingUsersRequestDto } from '../dto/request/inviting-user-request.dto';

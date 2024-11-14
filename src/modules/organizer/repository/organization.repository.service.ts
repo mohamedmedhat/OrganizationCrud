@@ -4,12 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Organization } from '../model/organization.model';
+import { Organization } from '../schema/organization.schema';
 import { Model, Types } from 'mongoose';
 import { CreateOrganizationRequestDto } from '../dto/request/create-organization-request.dto';
 import { UpdateOrganizationRequestDto } from '../dto/request/update-organization-request.dto';
 import { InviteUserDto } from '../dto/response/inviting-user-response.dto';
-import { Invitation } from '../model/invitation.model';
+import { Invitation } from '../schema/invitation.schema';
 import { PaginationInvitiationsResponseDto } from '../dto/response/invitations-pagination-response.dto';
 
 @Injectable()

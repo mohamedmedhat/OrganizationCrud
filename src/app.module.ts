@@ -8,6 +8,7 @@ import { UserModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { OrganizationModule } from './modules/organizer/organization.module';
+import { ChatGateway } from './modules/chat/chat.gateway';
 
 @Module({
   imports: [
@@ -61,6 +62,6 @@ import { OrganizationModule } from './modules/organizer/organization.module';
     OrganizationModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [ChatGateway],
 })
 export class AppModule {}

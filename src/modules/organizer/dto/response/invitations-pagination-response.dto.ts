@@ -1,5 +1,5 @@
 import { IsArray, IsInt } from 'class-validator';
-import { Invitation } from '../../model/invitation.model';
+import { Invitation } from '../../schema/invitation.schema';
 
 export class PaginationInvitiationsResponseDto {
   @IsArray()

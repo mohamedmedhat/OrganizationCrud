@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Organization, OrganizationSchema } from './model/organization.model';
+import { Organization, OrganizationSchema } from './schema/organization.schema';
 import { OrganizationService } from './service/organization.service';
 import { OrganizationRepository } from './repository/organization.repository.service';
 import { OrganizationController } from './controller/organization.controller';
-import { Invitation, InvitationSchema } from './model/invitation.model';
+import { Invitation, InvitationSchema } from './schema/invitation.schema';
 import { UserModule } from '../auth/auth.module';
 import { CacheService } from 'src/shared/caching/cache.service';
 import { CacheModule } from '@nestjs/cache-manager';
